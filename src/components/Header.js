@@ -1,12 +1,59 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { auth, provider } from '../firebase'
+import { 
+    selectUserName, 
+    selectUserPhoto,
+    setUserLoginDetails,
+ } from '../features/user/userSlice'
+
 
 function Header(props) {
+
+    const dispatch = useDispatch()
+    const history = useHistory()
+    const userName = useSelector(selectUserName)
+    const userPhoto = useSelector(selectUserPhoto)
+
+
+    const handleAuth = () => {
+        auth
+        .signInWithPopup(provider)
+        .then((result) => {
+            setUser(result.user);
+        })
+        .catch((error) => {
+            alert(error.message);
+        })
+    };
+
+    const setUser = (user) => {
+        dispatch(
+            setUserLoginDetails({
+                name: user.displayName,
+                email: user.email,
+                photo: user.photoURL,
+            })
+        )
+    }
+
+
+
     return (
         <Nav>
             <Logo>
                 <img src="/images/logo.svg" alt="Disney+" />
             </Logo>
+
+            {
+                !userName ?
+                <Login onClick={handleAuth}>Login</Login>
+                : 
+                <> 
+            
+
             <NavMenu>
                 <a href="/home">
                     <img src="/images/home-icon.svg" alt="HOME" />
@@ -33,6 +80,8 @@ function Header(props) {
                     <span>SERIES</span>
                 </a> 
             </NavMenu>
+            <UserImg src={userPhoto} alt={userName} />
+            </>}
         </Nav>
     )
 }
@@ -81,6 +130,7 @@ const NavMenu = styled.div`
         display: flex;
         align-items: center;
         padding: 0 12px;
+        cursor: pointer;
 
         img {
             height: 20px; 
@@ -130,6 +180,27 @@ const NavMenu = styled.div`
         display: none;
     }
 
+`
+
+const Login = styled.a`
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 8px 16px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border: 1px solid #f9f9f9;
+    border-radius: 4px;
+    transition: all .2s ease 0s;
+
+    &:hover {
+        background-color: #f9f9f9;
+        color: #000;
+        border-color: transparent;
+        cursor: pointer;
+    }
+`
+
+const UserImg = styled.img`
+    height: 100%;
 `
 
 export default Header
