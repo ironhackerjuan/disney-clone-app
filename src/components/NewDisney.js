@@ -1,36 +1,30 @@
 import styled from "styled-components"
 import { Link } from "react-router-dom"
+import { useSelector } from "react-redux"
+import { selectNewDisney} from '../features/movie/movieSlice'
 
 
 const NewDisney = (props) => {
+    const movies = useSelector(selectNewDisney);
+
     return (
         <Container>
             <h4>New to Disney+</h4>
             <Content>
-                <Wrap>
-                    <Link to="/" >
-                        <img src='https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/0123CEAB5978A6688C5D284C69FFCF9D577A72B7EC4742FCF44CA78D01B32827/scale?width=400&aspectRatio=1.78&format=jpeg' alt='' />
-                    </Link>
-                </Wrap>
-                <Wrap>
-                    <Link to="/" >
-                        <img src='https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/0123CEAB5978A6688C5D284C69FFCF9D577A72B7EC4742FCF44CA78D01B32827/scale?width=400&aspectRatio=1.78&format=jpeg' alt='' />
-                    </Link>
-                </Wrap>
-                <Wrap>
-                    <Link to="/" >
-                        <img src='https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/0123CEAB5978A6688C5D284C69FFCF9D577A72B7EC4742FCF44CA78D01B32827/scale?width=400&aspectRatio=1.78&format=jpeg' alt='' />
-                    </Link>
-                </Wrap>
-                <Wrap>
-                    <Link to="/" >
-                        <img src='https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/0123CEAB5978A6688C5D284C69FFCF9D577A72B7EC4742FCF44CA78D01B32827/scale?width=400&aspectRatio=1.78&format=jpeg' alt='' />
-                    </Link>
-                </Wrap>
+                {movies && 
+                  movies.map((movie, key) => (
+                        <Wrap key={key}>
+                            {movie.id}
+                            <Link to={'/detail/' + movie.id}>
+                                <img src={movie.cardImg} alt={movie.tittle} />
+                            </Link>
+                        </Wrap>
+                  ))}
             </Content>
         </Container>
     )
 }
+
 
 const Container = styled.div`
     padding: 0 0 26px;
