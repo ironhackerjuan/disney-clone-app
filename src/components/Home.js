@@ -1,10 +1,12 @@
 import styled from "styled-components"
 import ImgSlider from "./ImgSlider"
+import Viewers from "./Viewers"
 
 const Home = (props) => {
     return (
         <Container>
             <ImgSlider />
+            <Viewers /> 
         </Container>
     )
 }
@@ -16,13 +18,16 @@ const Container = styled.main`
     display: block;
     top: 72px;
     padding: 0 calc(3.5vw + 5px);
-    background: url("/images/home-background.png") center center / cover no-repeat fixed;
 
 
     &::after {
+        background: url("/images/home-background.png") center center / cover no-repeat fixed;
         content: "";
         position: absolute;
-        inset: 0px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
         opacity: 1;
         z-index: -1;
     }
