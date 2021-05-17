@@ -1,21 +1,37 @@
-import React from 'react'
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import styled from 'styled-components'
+import db from "../firebase";
 
 const Detail = (props) => {
+    const { id } = useParams();
+    const [ detailData, setDetailData ] = useState({});
+
+    useEffect(() => {
+        db.collection('movies')
+            .doc(id)
+            .get()
+            .then((doc) => {
+            if (doc.exists) {
+                setDetailData(doc.data())
+            } else {
+                console.log("no such document in firebase")
+            }
+        })
+        .catch((error) => {
+            console.log("Error getting document:", error)
+        });
+    }, [id])
+
     return (
         <Container>
             <Background>
-                <img 
-                    alt=""
-                    src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/4E9E81584305009D6385F6178D4B6930E97CD6EC4A3B53C818400DEF778FFA9A/scale?width=1440&aspectRatio=1.78&format=jpeg"
-                />    
+                <img alt={detailData.title} src={detailData.backgroundImg} />    
             </Background>
             
             <ImageTitle>
-                <img 
-                    alt=""
-                    src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/B983FF22BA64B6E19E0D3267280819B26758CFB765E8BED1099D11E320612953/scale?width=400&aspectRatio=1.78&format=jpeg"
-                />
+            <img alt={detailData.title} src={detailData.titleImg} />    
+
             </ImageTitle>
 
             <ContentMeta>
@@ -29,8 +45,8 @@ const Detail = (props) => {
                         <span>Trailer</span>
                     </Trailer>
                     <AddList>
-                        <span>
-                        </span>
+                        <span/>
+                        <span/>                    
                     </AddList>
                     <GroupWatch>
                         <div>
@@ -39,10 +55,10 @@ const Detail = (props) => {
                     </GroupWatch>
                 </Controls>
                 <SubTitle>
-                    Subtitle
+                    {detailData.subTitle}
                 </SubTitle>
                 <Description>
-                    Description
+                    {detailData.description}
                 </Description>
             </ContentMeta>
         </Container>
